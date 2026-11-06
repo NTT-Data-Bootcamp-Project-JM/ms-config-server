@@ -1,0 +1,10 @@
+# Profile for the bootcamp laptop that keeps Docker on pop-os.local.
+# Start every service with: --spring.profiles.active=popos
+spring:
+  data:
+    mongodb:
+      host: pop-os.local
+    redis:
+      host: pop-os.local
+  kafka:
+    bootstrap-servers: pop-os.local:9092
