@@ -1,4 +1,4 @@
-# Shared rules and infrastructure. Each service still owns its own MongoDB database.
+# Shared rules and infrastructure. Each service still owns its own MongoDB database name.
 bank:
   security:
     jwt-secret: bank-bootcamp-demo-secret-change-me
@@ -33,6 +33,9 @@ eureka:
 
 spring:
   data:
+    mongodb:
+      host: ${MONGODB_HOST:localhost}
+      port: ${MONGODB_PORT:27017}
     redis:
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6379}
@@ -86,3 +89,10 @@ logging:
     com.nttdata.bank: DEBUG
     org.springframework.data.mongodb: INFO
     org.mongodb: WARN
+
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    url: /openapi.yaml
+    disable-swagger-default-url: true
