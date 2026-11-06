@@ -11,3 +11,7 @@ spring:
       server:
         native:
           search-locations: classpath:/config
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs

@@ -1,0 +1,628 @@
+openapi: 3.1.0
+info:
+  title: Config server
+  description: Serves the externalized banking configuration. Clients read it through
+    the native profile.
+  version: 1.0.0
+servers:
+- url: http://127.0.0.1:8888
+  description: Generated server url
+paths:
+  /encrypt:
+    post:
+      tags:
+      - encryption-controller
+      operationId: encrypt
+      parameters:
+      - name: Content-Type
+        in: header
+        required: true
+        schema:
+          $ref: "#/components/schemas/MediaType"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /encrypt/{name}/{profiles}:
+    post:
+      tags:
+      - encryption-controller
+      operationId: encrypt_1
+      parameters:
+      - name: name
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: profiles
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: Content-Type
+        in: header
+        required: true
+        schema:
+          $ref: "#/components/schemas/MediaType"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /decrypt:
+    post:
+      tags:
+      - encryption-controller
+      operationId: decrypt
+      parameters:
+      - name: Content-Type
+        in: header
+        required: true
+        schema:
+          $ref: "#/components/schemas/MediaType"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /decrypt/{name}/{profiles}:
+    post:
+      tags:
+      - encryption-controller
+      operationId: decrypt_1
+      parameters:
+      - name: name
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: profiles
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: Content-Type
+        in: header
+        required: true
+        schema:
+          $ref: "#/components/schemas/MediaType"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /{name}/{profile}/{path}:
+    get:
+      tags:
+      - resource-controller
+      operationId: retrieveDefault
+      parameters:
+      - name: name
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: profile
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: path
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: resolvePlaceholders
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: true
+      - name: Accept-Charset
+        in: header
+        required: false
+        schema:
+          type: string
+          default: UTF-8
+      responses:
+        "404":
+          description: Not Found
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+            application/octet-stream:
+              schema:
+                type: string
+                format: byte
+  /{name}/{profile}/{label}/**:
+    get:
+      tags:
+      - resource-controller
+      operationId: retrieve
+      parameters:
+      - name: name
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: profile
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: label
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: resolvePlaceholders
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: true
+      - name: Accept-Charset
+        in: header
+        required: false
+        schema:
+          type: string
+          default: UTF-8
+      responses:
+        "404":
+          description: Not Found
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+            application/octet-stream:
+              schema:
+                type: string
+                format: byte
+  /{name}/{profiles}/{label}:
+    get:
+      tags:
+      - environment-controller
+      operationId: labelledIncludeOrigin
+      parameters:
+      - name: name
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: profiles
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: label
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/vnd.spring-cloud.config-server.v2+json:
+              schema:
+                $ref: "#/components/schemas/Environment"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Environment"
+  /{name}/{profiles}:
+    get:
+      tags:
+      - environment-controller
+      operationId: defaultLabelIncludeOrigin
+      parameters:
+      - name: name
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: profiles
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/vnd.spring-cloud.config-server.v2+json:
+              schema:
+                $ref: "#/components/schemas/Environment"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Environment"
+  /{name}-{profiles}.yml:
+    get:
+      tags:
+      - environment-controller
+      operationId: yaml
+      parameters:
+      - name: name
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: profiles
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: resolvePlaceholders
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /{name}-{profiles}.yaml:
+    get:
+      tags:
+      - environment-controller
+      operationId: yaml_1
+      parameters:
+      - name: name
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: profiles
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: resolvePlaceholders
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /{name}-{profiles}.properties:
+    get:
+      tags:
+      - environment-controller
+      operationId: properties
+      parameters:
+      - name: name
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: profiles
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: resolvePlaceholders
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /{name}-{profiles}.json:
+    get:
+      tags:
+      - environment-controller
+      operationId: jsonProperties
+      parameters:
+      - name: name
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: profiles
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: resolvePlaceholders
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /{label}/{name}-{profiles}.yml:
+    get:
+      tags:
+      - environment-controller
+      operationId: labelledYaml
+      parameters:
+      - name: name
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: profiles
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: label
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: resolvePlaceholders
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /{label}/{name}-{profiles}.yaml:
+    get:
+      tags:
+      - environment-controller
+      operationId: labelledYaml_1
+      parameters:
+      - name: name
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: profiles
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: label
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: resolvePlaceholders
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /{label}/{name}-{profiles}.properties:
+    get:
+      tags:
+      - environment-controller
+      operationId: labelledProperties
+      parameters:
+      - name: name
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: profiles
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: label
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: resolvePlaceholders
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /{label}/{name}-{profiles}.json:
+    get:
+      tags:
+      - environment-controller
+      operationId: labelledJsonProperties
+      parameters:
+      - name: name
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: profiles
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: label
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: resolvePlaceholders
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /key:
+    get:
+      tags:
+      - encryption-controller
+      operationId: getPublicKey
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /key/{name}/{profiles}:
+    get:
+      tags:
+      - encryption-controller
+      operationId: getPublicKey_1
+      parameters:
+      - name: name
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: profiles
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /encrypt/status:
+    get:
+      tags:
+      - encryption-controller
+      operationId: status
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties: {}
+components:
+  schemas:
+    MediaType:
+      type: object
+      properties:
+        type:
+          type: string
+        subtype:
+          type: string
+        parameters:
+          type: object
+          additionalProperties:
+            type: string
+        qualityValue:
+          type: number
+          format: double
+        charset:
+          type: string
+        concrete:
+          type: boolean
+        wildcardSubtype:
+          type: boolean
+        wildcardType:
+          type: boolean
+        subtypeSuffix:
+          type: string
+    Environment:
+      type: object
+      properties:
+        name:
+          type: string
+        profiles:
+          type: array
+          items:
+            type: string
+        label:
+          type: string
+        version:
+          type: string
+        state:
+          type: string
+        propertySources:
+          type: array
+          items:
+            $ref: "#/components/schemas/PropertySource"
+    PropertySource:
+      type: object
+      properties:
+        name:
+          type: string
+        source:
+          type: object
+          additionalProperties: {}
